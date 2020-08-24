@@ -1,0 +1,132 @@
+﻿@model OrderProcessingApplication.Models.ViewModels.PaymentDetailsViewModel
+
+@{
+
+    ViewBag.Title = "Payment Details";
+}
+
+<h2>Payment Details</h2>
+
+
+@using (Html.BeginForm("AddOrderPaymentDetails", "PaymentDetails"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="text-align:left">
+        <h5>Payment order processing</h5>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label("Payment Item", htmlAttributes: new { @class = "col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.PaymentItem, new SelectList(Model.PaymentCategories, "Value", "Text"), new { @class = "ddlStyle", id = "ddlpaymentCateries" })
+                @Html.ValidationMessageFor(model => model.PaymentItem, "", new { @class = "text-danger" })
+                @Html.ActionLink("Create packaing slip for shipping", "CreatePdf", "PaymentDetails", new { itemDetails = Model, id = "lnkGenerateSlip" })
+                @Html.ActionLink("Create duplicate packaing slip for the royalty dept.", "CreatePdf", "PaymentDetails", new { itemDetails = Model, id = "lnkDupGenerateSlip" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group" id="divIsActiveMembership">
+            @Html.Label("Activate Membership", htmlAttributes: new { @class = "col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.IsActiveMembership)
+                @Html.ValidationMessageFor(model => model.IsActiveMembership, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="divIsUpgradeMembership">
+            @Html.Label("Upgrade Membership", htmlAttributes: new { @class = "col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.IsUpgradeMembership)
+                @Html.ValidationMessageFor(model => model.IsUpgradeMembership, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="commision">
+            @Html.Label("Applicable Agent Commision", htmlAttributes: new { @class = "col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ApplicableAgentCommision, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                @Html.ValidationMessageFor(model => model.ApplicableAgentCommision, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group" id="activationEmail">
+            @Html.Label("Is Required Activation Upgrade Email Sent", htmlAttributes: new { @class = "col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.IsActivationUpgradeEmailSent)
+                @Html.ValidationMessageFor(model => model.IsActivationUpgradeEmailSent, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+
+        var id = $('#ddlpaymentCateries').val();
+        HideShowOptions(id);
+
+        $('#ddlpaymentCateries').change(function () {
+            debugger;
+            var id = $(this).val();
+            HideShowOptions(id);
+        });
+
+        function HideShowOptions(id) {
+            if (id == 1) {
+                $("#lnkGenerateSlip").show();
+            }
+            else {
+                $("#lnkGenerateSlip").hide();
+            }
+
+            if (id == 2) {
+                $("#lnkDupGenerateSlip").show();
+            }
+            else {
+                $("#lnkDupGenerateSlip").hide();
+
+            }
+
+            if (id == 1 || id == 2) {
+                $("#commision").show();
+            }
+            else {
+                $("#commision").hide();
+            }
+
+            if (id == 3) {
+                $("#divIsActiveMembership").show();
+            }
+            else {
+                $("#divIsActiveMembership").hide();
+            }
+
+            if (id == 4) {
+                $("#divIsUpgradeMembership").show();
+            }
+            else {
+                $("#divIsUpgradeMembership").hide();
+            }
+
+            if (id == 3 || id == 4) {
+                $("#activationEmail").show();
+            }
+            else {
+                $("#activationEmail").hide();
+            }
+
+        }
+    });
+</script>

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<OrderProcessingApplication.Models.ViewModels.ShipmentItemDetailsViewModel>
+
+@{
+    ViewBag.Title = "Shipment Order Details";
+}
+
+<h2>Shipment Order Details <small>[Order id = @Request.QueryString["orderId"].ToString()]</small></h2>
+
+
+<p>
+    @Html.ActionLink("Create New", "GetShipmentOrderDetails", new { orderId = @Request.QueryString["orderId"].ToString() })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrecausionsDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FromLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ToLocation)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrecausionsDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromLocation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToLocation)
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    @if (Model.Count() == 0)
+    {
+        <p style="text-align:center;">No records found</p>
+    }
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "GetOrderPaymentDetails")
+</div>

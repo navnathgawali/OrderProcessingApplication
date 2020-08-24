@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="OrderProcessingDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="OrderPaymentDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PaymentItem" Type="int" />
+          <Property Name="IsActiveMembership" Type="bit" />
+          <Property Name="IsUpgradeMembership" Type="bit" />
+          <Property Name="ApplicableAgentCommision" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="IsActivationUpgradeEmailSent" Type="bit" />
+        </EntityType>
+        <EntityType Name="ShipmentItemDetails">
+          <Key>
+            <PropertyRef Name="ItemId" />
+          </Key>
+          <Property Name="ItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemName" Type="varchar" MaxLength="50" />
+          <Property Name="PrecausionsDesc" Type="varchar" MaxLength="50" />
+          <Property Name="FromLocation" Type="nchar" MaxLength="10" />
+          <Property Name="ToLocation" Type="varchar" MaxLength="50" />
+          <Property Name="OrderId" Type="int" />
+        </EntityType>
+        <Association Name="FK_OrderPaymentDetails_Id">
+          <End Role="OrderPaymentDetails" Type="Self.OrderPaymentDetails" Multiplicity="0..1" />
+          <End Role="ShipmentItemDetails" Type="Self.ShipmentItemDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderPaymentDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ShipmentItemDetails">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="OrderProcessingDBModelStoreContainer">
+          <EntitySet Name="OrderPaymentDetails" EntityType="Self.OrderPaymentDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipmentItemDetails" EntityType="Self.ShipmentItemDetails" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_OrderPaymentDetails_Id" Association="Self.FK_OrderPaymentDetails_Id">
+            <End Role="OrderPaymentDetails" EntitySet="OrderPaymentDetails" />
+            <End Role="ShipmentItemDetails" EntitySet="ShipmentItemDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OrderProcessingDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="OrderProcessingDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ShipmentItemDetails" EntityType="OrderProcessingDBModel.ShipmentItemDetail" />
+          <EntitySet Name="OrderPaymentDetails" EntityType="OrderProcessingDBModel.OrderPaymentDetail" />
+          <AssociationSet Name="FK_OrderPaymentDetails_Id" Association="OrderProcessingDBModel.FK_OrderPaymentDetails_Id">
+            <End Role="OrderPaymentDetail" EntitySet="OrderPaymentDetails" />
+            <End Role="ShipmentItemDetail" EntitySet="ShipmentItemDetails" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ShipmentItemDetail">
+          <Key>
+            <PropertyRef Name="ItemId" />
+          </Key>
+          <Property Name="ItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PrecausionsDesc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FromLocation" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ToLocation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderId" Type="Int32" />
+          <NavigationProperty Name="OrderPaymentDetail" Relationship="OrderProcessingDBModel.FK_OrderPaymentDetails_Id" FromRole="ShipmentItemDetail" ToRole="OrderPaymentDetail" />
+        </EntityType>
+        <EntityType Name="OrderPaymentDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaymentItem" Type="Int32" />
+          <Property Name="IsActiveMembership" Type="Boolean" />
+          <Property Name="IsUpgradeMembership" Type="Boolean" />
+          <Property Name="ApplicableAgentCommision" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsActivationUpgradeEmailSent" Type="Boolean" />
+          <NavigationProperty Name="ShipmentItemDetails" Relationship="OrderProcessingDBModel.FK_OrderPaymentDetails_Id" FromRole="OrderPaymentDetail" ToRole="ShipmentItemDetail" />
+        </EntityType>
+        <Association Name="FK_OrderPaymentDetails_Id">
+          <End Type="OrderProcessingDBModel.OrderPaymentDetail" Role="OrderPaymentDetail" Multiplicity="0..1" />
+          <End Type="OrderProcessingDBModel.ShipmentItemDetail" Role="ShipmentItemDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderPaymentDetail">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ShipmentItemDetail">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OrderProcessingDBModelStoreContainer" CdmEntityContainer="OrderProcessingDBEntities">
+          <EntitySetMapping Name="ShipmentItemDetails">
+            <EntityTypeMapping TypeName="OrderProcessingDBModel.ShipmentItemDetail">
+              <MappingFragment StoreEntitySet="ShipmentItemDetails">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="ToLocation" ColumnName="ToLocation" />
+                <ScalarProperty Name="FromLocation" ColumnName="FromLocation" />
+                <ScalarProperty Name="PrecausionsDesc" ColumnName="PrecausionsDesc" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderPaymentDetails">
+            <EntityTypeMapping TypeName="OrderProcessingDBModel.OrderPaymentDetail">
+              <MappingFragment StoreEntitySet="OrderPaymentDetails">
+                <ScalarProperty Name="IsActivationUpgradeEmailSent" ColumnName="IsActivationUpgradeEmailSent" />
+                <ScalarProperty Name="ApplicableAgentCommision" ColumnName="ApplicableAgentCommision" />
+                <ScalarProperty Name="IsUpgradeMembership" ColumnName="IsUpgradeMembership" />
+                <ScalarProperty Name="IsActiveMembership" ColumnName="IsActiveMembership" />
+                <ScalarProperty Name="PaymentItem" ColumnName="PaymentItem" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
